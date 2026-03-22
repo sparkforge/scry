@@ -16,6 +16,8 @@ pub struct SiteInfo {
     pub name: String,
     pub display_name: String,
     pub location: Option<String>,
+    pub agent_url: Option<String>,
+    pub api_key: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

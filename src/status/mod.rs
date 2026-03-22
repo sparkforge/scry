@@ -2,6 +2,7 @@ pub mod network;
 pub mod server;
 pub mod agents;
 pub mod monitor;
+pub mod remote;
 
 use std::time::Duration;
 

@@ -59,14 +59,38 @@ async fn cmd_status(site: Option<String>, watch: bool) -> Result<()> {
 
         let config = config::load_site_config(&site_name)?;
 
-        output::render_site_header(
-            &config.site.name,
-            &config.site.display_name,
-            config.site.location.as_deref(),
-        );
+        // If agent_url is configured, fetch from scryd instead of doing local checks
+        if let Some(agent_url) = &config.site.agent_url {
+            match status::remote::fetch_remote_status(agent_url, config.site.api_key.as_deref()).await {
+                Ok(remote_status) => {
+                    output::render_site_header(
+                        &remote_status.site,
+                        &remote_status.display_name,
+                        Some(&remote_status.location),
+                    );
 
-        let results = gather_all_status(&config).await;
-        output::render_status_results(&results);
+                    let results = status::remote::convert_to_status_results(&remote_status);
+                    output::render_status_results(&results);
+                }
+                Err(e) => {
+                    output::render_site_header(
+                        &config.site.name,
+                        &config.site.display_name,
+                        config.site.location.as_deref(),
+                    );
+                    output::render_error(&format!("Failed to fetch from agent: {}", e));
+                }
+            }
+        } else {
+            output::render_site_header(
+                &config.site.name,
+                &config.site.display_name,
+                config.site.location.as_deref(),
+            );
+
+            let results = gather_all_status(&config).await;
+            output::render_status_results(&results);
+        }
 
         println!();
 
@@ -167,6 +191,20 @@ async fn cmd_site_add() -> Result<()> {
         .allow_empty(true)
         .interact_text()?;
 
+    let agent_url: String = Input::new()
+        .with_prompt("Agent URL (e.g., http://192.168.0.94:7734/status, leave empty for local checks)")
+        .allow_empty(true)
+        .interact_text()?;
+
+    let api_key: String = if !agent_url.is_empty() {
+        Input::new()
+            .with_prompt("Agent API key (optional)")
+            .allow_empty(true)
+            .interact_text()?
+    } else {
+        String::new()
+    };
+
     let mut site_config = SiteConfig {
         site: SiteInfo {
             name: name.clone(),
@@ -175,6 +213,16 @@ async fn cmd_site_add() -> Result<()> {
                 None
             } else {
                 Some(location)
+            },
+            agent_url: if agent_url.is_empty() {
+                None
+            } else {
+                Some(agent_url)
+            },
+            api_key: if api_key.is_empty() {
+                None
+            } else {
+                Some(api_key)
             },
         },
         network: None,

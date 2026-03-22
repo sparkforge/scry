@@ -15,6 +15,7 @@ pub fn render_status_line(result: &StatusResult) {
         "network" => format!("[{}]", result.category).cyan(),
         "server" => format!("[{}]", result.category).blue(),
         "agents" => format!("[{}]", result.category).green(),
+        "services" => format!("[{}]", result.category).magenta(),
         "monitor" => format!("[{}]", result.category).yellow(),
         _ => format!("[{}]", result.category).white(),
     };
@@ -26,11 +27,19 @@ pub fn render_status_line(result: &StatusResult) {
         HealthStatus::Online => {
             if result.category == "agents" {
                 "RUNNING".bright_green().bold()
+            } else if result.category == "services" {
+                "ACTIVE".bright_green().bold()
             } else {
                 "ONLINE".bright_green().bold()
             }
         }
-        HealthStatus::Offline => "OFFLINE".bright_red().bold(),
+        HealthStatus::Offline => {
+            if result.category == "services" {
+                "INACTIVE".bright_red().bold()
+            } else {
+                "OFFLINE".bright_red().bold()
+            }
+        }
         HealthStatus::Degraded => "DEGRADED".yellow().bold(),
         HealthStatus::Unknown => "UNKNOWN".white().dimmed(),
     };
