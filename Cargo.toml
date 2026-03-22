@@ -1,0 +1,48 @@
+[package]
+name = "forge"
+version = "0.1.0"
+edition = "2021"
+authors = ["Cary Wolff <boss@caryyon.com>"]
+description = "SparkForge CLI for monitoring managed client sites"
+license = "MIT"
+repository = "https://github.com/sparkforge/forge-cli"
+keywords = ["cli", "monitoring", "network", "ai-agents"]
+categories = ["command-line-utilities"]
+
+[[bin]]
+name = "forge"
+path = "src/main.rs"
+
+[dependencies]
+# CLI framework
+clap = { version = "4", features = ["derive", "env"] }
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# HTTP client
+reqwest = { version = "0.11", features = ["json", "rustls-tls"], default-features = false }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+
+# Terminal colors and formatting
+colored = "2"
+crossterm = "0.27"
+
+# Utilities
+dirs = "5"
+anyhow = "1"
+thiserror = "1"
+futures = "0.3"
+dialoguer = "0.11"
+
+# For ping functionality
+surge-ping = "0.8"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
