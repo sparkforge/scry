@@ -1,0 +1,43 @@
+# Example SparkForge site configuration
+# Copy to ~/.config/forge/sites/client-04.toml
+
+[site]
+name = "client-04"
+display_name = "Acme Corp"
+location = "Milwaukee, WI"
+
+[[network.switches]]
+host = "192.168.1.1"
+label = "48-port managed switch"
+type = "http"
+health_url = "http://192.168.1.1/api/status"
+
+[[network.access_points]]
+count = 6
+label = "enterprise APs"
+hosts = ["192.168.1.10", "192.168.1.11", "192.168.1.12"]
+
+[[network.vlans]]
+names = ["ops", "guest", "iot"]
+
+[[servers]]
+host = "192.168.1.100"
+label = "rack-01"
+ram_gb = 32
+storage = "1TB SSD"
+health_url = "http://192.168.1.100:8080/health"
+
+[[agents]]
+name = "lead-enrichment"
+health_url = "http://192.168.1.100:3001/health"
+
+[[agents]]
+name = "doc-processor"
+health_url = "http://192.168.1.100:3002/health"
+
+[[agents]]
+name = "competitor-watch"
+health_url = "http://192.168.1.100:3003/health"
+
+[monitor]
+uptime_url = "https://uptime.sparkforge.io/api/site/client-04"
