@@ -1,12 +1,12 @@
-# forge
+# scry
 
-**SparkForge CLI** - Monitor and manage SparkForge client sites from the command line.
+**Scry CLI** - Monitor and manage SparkForge client sites from the command line.
 
-SparkForge is a Milwaukee-based network solutions and AI automation company. We deploy and manage enterprise network infrastructure alongside intelligent AI agents for businesses. The `forge` CLI provides a unified status view of any SparkForge-managed client site.
+SparkForge is a Milwaukee-based network solutions and AI automation company. We deploy and manage enterprise network infrastructure alongside intelligent AI agents for businesses. The `scry` CLI provides a unified status view of any SparkForge-managed client site. The companion daemon `scryd` runs on managed servers to provide real-time status updates.
 
 ## What It Does
 
-Think of `forge` as a fast, beautiful `htop` for a managed network + AI stack. It gives you instant visibility into:
+Think of `scry` as a fast, beautiful `htop` for a managed network + AI stack. It gives you instant visibility into:
 
 - **Network infrastructure** - Switches, access points, VLANs
 - **Server health** - Rack servers with specs and connectivity status
@@ -14,7 +14,7 @@ Think of `forge` as a fast, beautiful `htop` for a managed network + AI stack. I
 - **Uptime monitoring** - Historical availability with visual progress bars
 
 ```
-$ forge status --site client-04
+$ scry status --site client-04
 
 Acme Corp (client-04)
 Milwaukee, WI
@@ -35,55 +35,55 @@ Milwaukee, WI
 
 **Linux/macOS:**
 ```bash
-curl -fsSL https://github.com/sparkforge/forge-cli/releases/latest/download/forge-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m) -o forge
-chmod +x forge
-sudo mv forge /usr/local/bin/
+curl -fsSL https://github.com/sparkforge/scry/releases/latest/download/scry-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m) -o scry
+chmod +x scry
+sudo mv scry /usr/local/bin/
 ```
 
 **macOS (Apple Silicon):**
 ```bash
-curl -fsSL https://github.com/sparkforge/forge-cli/releases/latest/download/forge-macos-arm64 -o forge
-chmod +x forge
-sudo mv forge /usr/local/bin/
+curl -fsSL https://github.com/sparkforge/scry/releases/latest/download/scry-macos-arm64 -o scry
+chmod +x scry
+sudo mv scry /usr/local/bin/
 ```
 
 ### Build from Source
 
 ```bash
 # Requires Rust 1.70+
-cargo install --git https://github.com/sparkforge/forge-cli
+cargo install --git https://github.com/sparkforge/scry
 
 # Or clone and build locally
-git clone https://github.com/sparkforge/forge-cli
-cd forge-cli
+git clone https://github.com/sparkforge/scry
+cd scry
 cargo build --release
-./target/release/forge --help
+./target/release/scry --help
 ```
 
 ## Commands
 
-### `forge status [--site <name>] [--watch]`
+### `scry status [--site <name>] [--watch]`
 
 Display the status of all components at a site.
 
 ```bash
 # Check a specific site
-forge status --site client-04
+scry status --site client-04
 
 # Watch mode (refreshes every 30 seconds)
-forge status --site client-04 --watch
+scry status --site client-04 --watch
 
-# Use FORGE_SITE environment variable
-export FORGE_SITE=client-04
-forge status
+# Use SCRY_SITE environment variable
+export SCRY_SITE=client-04
+scry status
 ```
 
-### `forge sites`
+### `scry sites`
 
 List all configured sites with health indicators.
 
 ```bash
-$ forge sites
+$ scry sites
 
 Configured Sites
 ────────────────────────────────────────
@@ -92,12 +92,12 @@ Configured Sites
   ● client-12
 ```
 
-### `forge site add`
+### `scry site add`
 
 Interactive wizard to add a new site configuration.
 
 ```bash
-$ forge site add
+$ scry site add
 
 Add New Site Configuration
 ────────────────────────────────────────
@@ -108,12 +108,12 @@ Location (e.g., Milwaukee, WI): Chicago, IL
 ...
 ```
 
-### `forge agents [--site <name>]`
+### `scry agents [--site <name>]`
 
 Detailed view of AI agent status with last-run times and error counts.
 
 ```bash
-$ forge agents --site client-04
+$ scry agents --site client-04
 
 Agent Status - client-04
 ────────────────────────────────────────────────────────────────
@@ -129,23 +129,23 @@ Agent Status - client-04
     Endpoint:  http://192.168.1.100:3002/health
 ```
 
-### `forge ping <host>`
+### `scry ping <host>`
 
 Quick connectivity check with latency measurement.
 
 ```bash
-$ forge ping 192.168.1.1
+$ scry ping 192.168.1.1
 ● 192.168.1.1 is reachable (12.34ms)
 
-$ forge ping 10.0.0.99
+$ scry ping 10.0.0.99
 ● 10.0.0.99 is unreachable
 ```
 
 ## Configuration
 
-Site configurations are stored as TOML files in `~/.config/forge/sites/`.
+Site configurations are stored as TOML files in `~/.config/scry/sites/`.
 
-### Example: `~/.config/forge/sites/client-04.toml`
+### Example: `~/.config/scry/sites/client-04.toml`
 
 ```toml
 [site]
@@ -216,7 +216,7 @@ uptime_url = "https://uptime.sparkforge.io/api/site/client-04"  # optional
 
 ## Health Check Logic
 
-For each component, `forge` tries these checks in order:
+For each component, `scry` tries these checks in order:
 
 1. **HTTP Health**: If `health_url` is provided, HTTP GET expecting 200
 2. **TCP Connect**: Try ports 443, 80, 22, 8080
@@ -228,7 +228,7 @@ All checks have a 3-second timeout and run concurrently for speed.
 
 | Variable | Description |
 |----------|-------------|
-| `FORGE_SITE` | Default site name when `--site` not specified |
+| `SCRY_SITE` | Default site name when `--site` not specified |
 
 ## Output Colors
 

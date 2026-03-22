@@ -1,5 +1,5 @@
-# Example SparkForge site configuration
-# Copy to ~/.config/forge/sites/client-04.toml
+# Example Scry site configuration
+# Copy to ~/.config/scry/sites/client-04.toml
 
 [site]
 name = "client-04"

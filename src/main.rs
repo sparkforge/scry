@@ -50,7 +50,7 @@ async fn run() -> Result<()> {
 async fn cmd_status(site: Option<String>, watch: bool) -> Result<()> {
     let site_name = site
         .or_else(config::get_default_site)
-        .context("No site specified. Use --site or set FORGE_SITE environment variable.")?;
+        .context("No site specified. Use --site or set SCRY_SITE environment variable.")?;
 
     loop {
         if watch {
@@ -356,7 +356,7 @@ async fn cmd_site_add() -> Result<()> {
         config::get_config_dir()?.join(format!("{}.toml", name)).display()
     ));
     println!();
-    println!("Check status with: forge status --site {}", name);
+    println!("Check status with: scry status --site {}", name);
 
     Ok(())
 }
@@ -364,7 +364,7 @@ async fn cmd_site_add() -> Result<()> {
 async fn cmd_agents(site: Option<String>) -> Result<()> {
     let site_name = site
         .or_else(config::get_default_site)
-        .context("No site specified. Use --site or set FORGE_SITE environment variable.")?;
+        .context("No site specified. Use --site or set SCRY_SITE environment variable.")?;
 
     let config = config::load_site_config(&site_name)?;
 

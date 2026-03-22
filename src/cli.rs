@@ -1,8 +1,8 @@
 use clap::{Parser, Subcommand};
 
-/// SparkForge CLI - Monitor and manage SparkForge client sites
+/// Scry CLI - Monitor and manage SparkForge client sites
 #[derive(Parser, Debug)]
-#[command(name = "forge")]
+#[command(name = "scry")]
 #[command(author = "SparkForge <hello@sparkforge.io>")]
 #[command(version)]
 #[command(about = "Monitor and manage SparkForge managed client sites", long_about = None)]
@@ -15,8 +15,8 @@ pub struct Cli {
 pub enum Commands {
     /// Display status of all components at a site
     Status {
-        /// Site name to check (reads from FORGE_SITE env var if not provided)
-        #[arg(short, long, env = "FORGE_SITE")]
+        /// Site name to check (reads from SCRY_SITE env var if not provided)
+        #[arg(short, long, env = "SCRY_SITE")]
         site: Option<String>,
 
         /// Watch mode - refresh every 30 seconds
@@ -34,7 +34,7 @@ pub enum Commands {
     /// Show detailed agent status
     Agents {
         /// Site name to check
-        #[arg(short, long, env = "FORGE_SITE")]
+        #[arg(short, long, env = "SCRY_SITE")]
         site: Option<String>,
     },
 

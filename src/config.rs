@@ -74,7 +74,7 @@ fn default_check_type() -> String {
 pub fn get_config_dir() -> Result<PathBuf> {
     let config_dir = dirs::config_dir()
         .context("Could not determine config directory")?
-        .join("forge")
+        .join("scry")
         .join("sites");
     Ok(config_dir)
 }
@@ -126,5 +126,5 @@ pub fn save_site_config(config: &SiteConfig) -> Result<()> {
 }
 
 pub fn get_default_site() -> Option<String> {
-    std::env::var("FORGE_SITE").ok()
+    std::env::var("SCRY_SITE").ok()
 }

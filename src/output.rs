@@ -62,7 +62,7 @@ pub fn render_sites_list(sites: &[(String, bool)]) {
     if sites.is_empty() {
         println!("{}", "No sites configured.".dimmed());
         println!();
-        println!("Add a site with: {}", "forge site add".cyan());
+        println!("Add a site with: {}", "scry site add".cyan());
     } else {
         for (site, is_healthy) in sites {
             let indicator = if *is_healthy {

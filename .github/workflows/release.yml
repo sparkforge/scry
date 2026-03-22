@@ -18,23 +18,23 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            artifact_name: forge
-            asset_name: forge-linux-x86_64
+            artifact_name: scry
+            asset_name: scry-linux-x86_64
 
           - target: aarch64-apple-darwin
             os: macos-latest
-            artifact_name: forge
-            asset_name: forge-macos-arm64
+            artifact_name: scry
+            asset_name: scry-macos-arm64
 
           - target: x86_64-apple-darwin
             os: macos-latest
-            artifact_name: forge
-            asset_name: forge-macos-x86_64
+            artifact_name: scry
+            asset_name: scry-macos-x86_64
 
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-            artifact_name: forge.exe
-            asset_name: forge-windows-x86_64.exe
+            artifact_name: scry.exe
+            asset_name: scry-windows-x86_64.exe
 
     steps:
       - name: Checkout
@@ -80,25 +80,25 @@ jobs:
         run: |
           mkdir -p release
           # Linux
-          cp artifacts/forge-linux-x86_64/forge release/forge-linux-x86_64
-          chmod +x release/forge-linux-x86_64
+          cp artifacts/scry-linux-x86_64/scry release/scry-linux-x86_64
+          chmod +x release/scry-linux-x86_64
           # macOS ARM64
-          cp artifacts/forge-macos-arm64/forge release/forge-macos-arm64
-          chmod +x release/forge-macos-arm64
+          cp artifacts/scry-macos-arm64/scry release/scry-macos-arm64
+          chmod +x release/scry-macos-arm64
           # macOS x86_64
-          cp artifacts/forge-macos-x86_64/forge release/forge-macos-x86_64
-          chmod +x release/forge-macos-x86_64
+          cp artifacts/scry-macos-x86_64/scry release/scry-macos-x86_64
+          chmod +x release/scry-macos-x86_64
           # Windows
-          cp artifacts/forge-windows-x86_64.exe/forge.exe release/forge-windows-x86_64.exe
+          cp artifacts/scry-windows-x86_64.exe/scry.exe release/scry-windows-x86_64.exe
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release/forge-linux-x86_64
-            release/forge-macos-arm64
-            release/forge-macos-x86_64
-            release/forge-windows-x86_64.exe
+            release/scry-linux-x86_64
+            release/scry-macos-arm64
+            release/scry-macos-x86_64
+            release/scry-windows-x86_64.exe
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
