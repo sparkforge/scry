@@ -15,6 +15,8 @@ pub struct RemoteSiteStatus {
     pub network: Vec<RemoteNetworkStatus>,
     pub agents: Vec<RemoteAgentStatus>,
     pub services: Vec<RemoteServiceStatus>,
+    #[serde(default)]
+    pub crons: Vec<CronStatus>,
     pub uptime_pct: f64,
 }
 
@@ -47,6 +49,15 @@ pub struct RemoteAgentStatus {
 #[derive(Debug, Deserialize)]
 pub struct RemoteServiceStatus {
     pub name: String,
+    pub status: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CronStatus {
+    pub name: String,
+    pub schedule: String,
+    pub last_run: String,
+    pub next_run: String,
     pub status: String,
 }
 
@@ -142,6 +153,26 @@ pub fn convert_to_status_results(remote: &RemoteSiteStatus) -> Vec<StatusResult>
             label: service.name.clone(),
             status,
             details: None,
+        });
+    }
+
+    // Crons
+    for cron in &remote.crons {
+        let status = match cron.status.as_str() {
+            "ok" => HealthStatus::Online,
+            "error" => HealthStatus::Offline,
+            _ => HealthStatus::Unknown, // idle
+        };
+        let label = if cron.name.len() > 38 {
+            format!("{}...", &cron.name[..35])
+        } else {
+            cron.name.clone()
+        };
+        results.push(StatusResult {
+            category: "crons".to_string(),
+            label,
+            status,
+            details: Some(format!("last: {} | next: {}", cron.last_run, cron.next_run)),
         });
     }
 

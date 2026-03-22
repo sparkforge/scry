@@ -17,6 +17,7 @@ pub fn render_status_line(result: &StatusResult) {
         "agents" => format!("[{}]", result.category).green(),
         "services" => format!("[{}]", result.category).magenta(),
         "monitor" => format!("[{}]", result.category).yellow(),
+        "crons" => format!("[{}]", result.category).yellow(),
         _ => format!("[{}]", result.category).white(),
     };
 
@@ -29,6 +30,8 @@ pub fn render_status_line(result: &StatusResult) {
                 "RUNNING".bright_green().bold()
             } else if result.category == "services" {
                 "ACTIVE".bright_green().bold()
+            } else if result.category == "crons" {
+                "OK".bright_green().bold()
             } else {
                 "ONLINE".bright_green().bold()
             }
@@ -36,12 +39,20 @@ pub fn render_status_line(result: &StatusResult) {
         HealthStatus::Offline => {
             if result.category == "services" {
                 "INACTIVE".bright_red().bold()
+            } else if result.category == "crons" {
+                "ERROR".bright_red().bold()
             } else {
                 "OFFLINE".bright_red().bold()
             }
         }
         HealthStatus::Degraded => "DEGRADED".yellow().bold(),
-        HealthStatus::Unknown => "UNKNOWN".white().dimmed(),
+        HealthStatus::Unknown => {
+            if result.category == "crons" {
+                "IDLE".white().dimmed()
+            } else {
+                "UNKNOWN".white().dimmed()
+            }
+        }
     };
 
     let details_str = result
